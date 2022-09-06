@@ -16,6 +16,14 @@
 
 <br>
 
+## 📃 API 설계
+
+<br>
+
+## 📦 모델링
+
+<br>
+
 ## 🛠 사용 기술
 - API<br>
 ![python badge](https://img.shields.io/badge/Python-3.9-%233776AB?&logo=python&logoColor=white)
@@ -39,10 +47,12 @@
 
 <br>
 
-## 깃 & 코드 컨벤션
+## 🕵️‍ 깃 & 코드 컨벤션
+[깃 & 코드 컨벤션](https://github.com/nmdkims/account_book_payhere/wiki/Git-and-Code-Convention)
 
+<br>
 
-## Pre-commit 린트와 포매터
+## 💡 Pre-commit 린트와 포매터
 
 Formatter
 - isort
@@ -53,12 +63,6 @@ Lint
 
 로컬에선 pre-commit 라이브러리 사용으로 커밋 전 세가지 라이브러리를 한번에 실행하고 통과되지않을시 커밋이 불가능합니다.
 레포지토리에는 github action으로 다시 한번 체크 후, 통과되지 않으면 merge가 block됩니다.
-
-<br>
-
-## 🌟 API 명세서
-
-
 
 <br>
 
