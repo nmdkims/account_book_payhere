@@ -21,7 +21,7 @@
 <br>
 
 ## 📦 모델링
-<img width="872" alt="image" src="https://user-images.githubusercontent.com/89897944/188914875-582bf3e5-fd00-409d-98c7-f20b4d71d6c1.png">
+<img width="867" alt="image" src="https://user-images.githubusercontent.com/89897944/188925423-080a3e7c-e81e-4c3b-af7e-62f1799a9fce.png">
 
 
 <br>
