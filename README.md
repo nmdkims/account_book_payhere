@@ -17,6 +17,8 @@
 <br>
 
 ## 📃 API 설계
+![image](https://user-images.githubusercontent.com/89897944/188939259-3ba81396-140b-4d2f-9ee2-3e5ad26a89b6.png)
+
 
 <br>
 
