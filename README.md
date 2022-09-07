@@ -31,7 +31,7 @@
 ![python badge](https://img.shields.io/badge/Python-3.9-%233776AB?&logo=python&logoColor=white)
 ![django badge](https://img.shields.io/badge/Django-4.0.6-%23092E20?&logo=Django&logoColor=white)
 - DB<br>
-![mysql badge](https://img.shields.io/badge/MySQL-8.0.29-%234479A1?&logo=MySQL&logoColor=white)
+![mysql badge](https://img.shields.io/badge/MySQL-5.7-%234479A1?&logo=MySQL&logoColor=white)
 
 - 배포<br>
 ![aws badge](https://img.shields.io/badge/AWS-EC2-%23FF9900?&logo=Amazon%20EC2&logoColor=white)
