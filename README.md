@@ -161,6 +161,8 @@ Lint
 <br>
 
 ## ✔️ Test Case 
+서비스하는 모든 API에 대한 TESTCASE 작성 및 수행
+![image](https://user-images.githubusercontent.com/89897944/177983110-f846cef3-589e-49ca-b3cf-5a314d4b8cf2.png)
 
 <br>
 
