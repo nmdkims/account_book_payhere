@@ -21,10 +21,94 @@
 
 로그인 로그아웃의 구성을 기본적인 장고에서 제공하는 로그아웃으로 로그아웃을 구현한것에 추가적으로 백엔드 쪽에서 refresh token을 블랙리스트에 등록해서 로그아웃 시키는 방법을 구현하였습니다.
 
+
+<br>
+<details>
+<summary>🚀 API 호출 테스트 결과</summary>
+<div markdown="1">
+<ul>
+  <li>
+    <p>회원가입</p>
+    <img width="680" alt="image" src="https://user-images.githubusercontent.com/89897944/189649132-167bbbec-57fd-4a90-aace-e0473f9d440d.png">
+  </li>
+  <li>
+    <p>로그인</p>
+    <img width="1267" alt="image" src="https://user-images.githubusercontent.com/89897944/189649244-7289c288-92d3-4f7f-8914-7ce27f858f5d.png">
+  </li>
+  <li>
+    <p>로그아웃</p>
+    <img width="743" alt="image" src="https://user-images.githubusercontent.com/89897944/189649971-b3059c9d-7bea-4071-9c45-37dbdebab6b6.png">
+
+  </li>
+  <li>
+    <p>로그아웃(토큰반납)</p>
+    <img width="840" alt="image" src="https://user-images.githubusercontent.com/89897944/189649802-a0e10bf8-947d-42b7-9c41-852929314ebf.png">
+
+  </li>
+
+  <li>
+    <p>삭제된 가계부 목록 조회</p>
+    
+  </li>
+  <li>
+    <p>가계부 목록조회 & 생성</p>
+    ![image](https://user-images.githubusercontent.com/89897944/189651635-093bf35c-d427-4e06-8f62-c08ab30ed384.png)
+
+  </li>
+  
+  <li>
+    <p>가계부 단건 조회 </p>
+    ![image](https://user-images.githubusercontent.com/89897944/189656439-86ab7021-7f4c-4940-bdbd-106f63427551.png)
+
+  </li>
+  
+  <li>
+    <p>가계부 수정</p>
+    
+  </li>
+  <li>
+    <p>가계부 삭제</p>
+    
+  </li>
+  <li>
+    <p>가계부 복구</p>
+    
+  </li>
+  <li>
+    <p>가계부 기록 생성</p>
+    
+  </li>
+  <li>
+    <p>가계부 기록 조회</p>
+    
+  </li>
+  <li>
+    <p>가계부 기록 수정</p>
+    
+  </li>
+  <li>
+    <p>가계부 기록 삭제</p>
+    
+  </li>
+  <li>
+    <p>가계부 기록 복구</p>
+    
+  </li>
+</ul>
+</div>
+</details>
+
+<br>
+
 <br>
 
 ## 📦 모델링
+- 1차 
 <img width="867" alt="image" src="https://user-images.githubusercontent.com/89897944/188925423-080a3e7c-e81e-4c3b-af7e-62f1799a9fce.png">
+
+- 2차(최종) 
+- <img width="784" alt="image" src="https://user-images.githubusercontent.com/89897944/189650949-b7e2bea9-5529-4cb2-bf17-67cfe2a269df.png">
+
 
 
 <br>
