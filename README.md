@@ -102,7 +102,11 @@
 <br>
 
 ## 📦 모델링
+- 1차 
 <img width="867" alt="image" src="https://user-images.githubusercontent.com/89897944/188925423-080a3e7c-e81e-4c3b-af7e-62f1799a9fce.png">
+
+- 2차(최종) 
+- <img width="784" alt="image" src="https://user-images.githubusercontent.com/89897944/189650949-b7e2bea9-5529-4cb2-bf17-67cfe2a269df.png">
 
 
 <br>
