@@ -140,3 +140,53 @@ class AccountBooksDetailAPIView(APIView):
 
         except KeyError:
             return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# url : PATCH api/v1/accountbooks/<accountbook_id>/recovery
+class AccountBooksDetailRecoveryAPIView(APIView):
+    """
+    Assignee : 훈희
+    permission = 작성자 본인만 가능
+    Http method = PATCH
+    PATCH : 가계부 복구
+    """
+
+    permission_classes = [IsOwner]
+
+    def get_object_and_check_permission(self, obj_id):
+        """
+        Assignee : 훈희
+        obj_id : int
+        input 인자로 단일 오브젝트를 가져오고, 퍼미션 검사를 하는 메서드입니다.
+        DoesNotExist 에러 발생 시 None을 리턴합니다.
+        """
+        try:
+            object = AccountBook.objects.get(id=obj_id)
+        except AccountBook.DoesNotExist:
+            return
+
+        self.check_object_permissions(self.request, object)
+        return object
+
+    def patch(self, request, accountbook_id):
+        """
+        Assignee : 훈희
+        accountbook_id : int
+        가계부 단일 객체 복구를 위한 메서드입니다.
+        is_deleted 필드의 값을 True에서 False로 변경하는 로직으로 구성됩니다.
+        is_deleted가 True or None인 경우 400에러를 리턴합니다.
+        """
+        account_book = self.get_object_and_check_permission(accountbook_id)
+        if not account_book:
+            return Response({"error": "가계부가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            if request.data["is_deleted"] == False:
+                account_book.is_deleted = False
+                account_book.save()
+                return Response({"message": "가계부 복구 성공!!"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        except KeyError:
+            return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
