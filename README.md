@@ -45,22 +45,23 @@
     <img width="840" alt="image" src="https://user-images.githubusercontent.com/89897944/189649802-a0e10bf8-947d-42b7-9c41-852929314ebf.png">
 
   </li>
-  <li>
-    <p>가계부 목록 조회</p>
-    
-  </li>
+
   <li>
     <p>삭제된 가계부 목록 조회</p>
     
   </li>
   <li>
-    <p>가계부 생성</p>
-    
+    <p>가계부 목록조회 & 생성</p>
+    ![image](https://user-images.githubusercontent.com/89897944/189651635-093bf35c-d427-4e06-8f62-c08ab30ed384.png)
+
   </li>
+  
   <li>
-    <p>가계부 조회</p>
-    
+    <p>가계부 단건 조회 </p>
+    ![image](https://user-images.githubusercontent.com/89897944/189656439-86ab7021-7f4c-4940-bdbd-106f63427551.png)
+
   </li>
+  
   <li>
     <p>가계부 수정</p>
     
