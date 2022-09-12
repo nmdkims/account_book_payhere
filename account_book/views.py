@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import AccountBook
+from .models import AccountBook, AccountBookRecord
 from .permissions import IsOwner
 from .serializers import (
     AccountBooksModelSerializer,
@@ -203,6 +203,7 @@ class AccountBooksRecordAPIView(APIView):
     Assignee : 훈희
     permission = 작성자 본인만 가능
     Http method = POST
+    GET : 가계부 기록 리스트 조회
     POST : 가계부 기록 생성
     """
 
@@ -258,3 +259,90 @@ class AccountBooksRecordAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# url : GET,PUT,PATCH /api/v1/accountbooks/records/<record_id>
+class AccountBooksRecordDetailAPIView(APIView):
+    """
+    Assignee : 훈희
+    permission = 작성자 본인만 가능
+    Http method = GET, PUT, PATCH
+    GET : 가계부 단건 상세 조회
+    PUT : 가계부 기록 수정
+    PATCH : 가계부 기록 삭제
+    """
+
+    permission_classes = [IsOwner]
+
+    def get_object_and_check_permission(self, obj_id):
+        """
+        Assignee : 훈희
+        obj_id : int
+        input 인자로 AccountBookRecord 객체를 가져와 퍼미션 검사를 하는 메서드입니다.
+        DoesNotExist 에러 발생 시 None을 리턴합니다.
+        APIView 클래스에 정의된 check_object_permissions 메서드를 override해서 검사를 진행합니다.
+        """
+        try:
+            object = AccountBookRecord.objects.get(id=obj_id)
+        except AccountBookRecord.DoesNotExist:
+            return
+
+        self.check_object_permissions(self.request, object)
+        return object
+
+    def get(self, request, record_id):
+        """
+        Assignee : 훈희
+        record_id : int
+        클라이언트의 요청 및 가계부 기록 고유번호 입력 시, 특정 기록에 대한 내용을 응답하는 메서드입니다.
+        설정한 permission_classes로 인해 특정 기록의 작성자가 아닐 경우, 접근이 제한됩니다.
+        """
+        account_book_record = self.get_object_and_check_permission(record_id)
+        if not account_book_record:
+            return Response({"error": "해당 가계부 기록이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(AccountBooksRecordModelSerializer(account_book_record).data, status=status.HTTP_200_OK)
+
+    def put(self, request, record_id):
+        """
+        Assignee : 훈희
+        record_id : int
+        가계부 기록의 단일 객체 수정을 위한 메서드입니다. partial 옵션을 사용해 일부분만 수정이 가능합니다.
+        """
+        record = self.get_object_and_check_permission(record_id)
+        if not record:
+            return Response({"error": "기록이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            if request.data["is_deleted"] is not None:
+                return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+        except KeyError:
+            pass
+
+        serializer = AccountBooksRecordModelSerializer(record, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "기록 수정 성공!!"}, status=status.HTTP_200_OK)
+
+    def patch(self, request, record_id):
+        """
+        Assignee : 훈희
+        record_id : int
+        가계부 기록 단일 객체 삭제를 위한 메서드입니다.
+        is_deleted 필드의 값을 False에서 True로 변경하는 로직으로 구성됩니다.
+        is_deleted가 False or None인 경우 400에러를 리턴합니다.
+        """
+        account_book_record = self.get_object_and_check_permission(record_id)
+        if not account_book_record:
+            return Response({"error": "기록이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            if request.data["is_deleted"] == True:
+                account_book_record.is_deleted = True
+                account_book_record.deleted_at = timezone.now()
+                account_book_record.save()
+                return Response({"message": "기록 삭제 성공!!."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        except KeyError:
+            return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
