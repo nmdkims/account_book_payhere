@@ -77,3 +77,33 @@ class AccountBooksModelSerializer(ModelSerializer):
             "accountbook_record",
         )
         read_only_fields = ["user", "is_deleted"]
+
+
+class GetDeleteAccountBooksRecordModelSerializer(ModelSerializer):
+    """
+    Assignee : 훈희
+    가계부 기록이 삭제된 데이터를 보기위한 시리얼라이저입니다. @@@
+    """
+
+    class Meta:
+        model = AccountBookRecord
+        fields = ("date", "amount", "memo", "created_at", "deleted_at", "is_deleted")
+
+
+class GetDeleteAccountBooksModelSerializer(ModelSerializer):
+    """
+    Assignee : 훈희
+    해당 가계부의 삭제된 기록만 보여주는 시리얼라이저 입니다.
+    """
+
+    accountbook_record = serializers.SerializerMethodField(required=False, read_only=True)
+
+    def get_accountbook_record(self, obj):
+        account_book_records = obj.account_book_record.order_by("date", "created_at").filter(is_deleted=True)
+        account_book_records_serializer = GetDeleteAccountBooksRecordModelSerializer(account_book_records, many=True)
+        return account_book_records_serializer.data
+
+    class Meta:
+        model = AccountBook
+        fields = ("user", "title", "created_at", "is_deleted", "accountbook_record")
+        read_only_fields = ["user", "is_deleted"]

@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
@@ -5,7 +6,11 @@ from rest_framework.views import APIView
 
 from .models import AccountBook
 from .permissions import IsOwner
-from .serializers import AccountBooksModelSerializer
+from .serializers import (
+    AccountBooksModelSerializer,
+    AccountBooksRecordModelSerializer,
+    GetDeleteAccountBooksModelSerializer,
+)
 
 
 # url : GET, POST api/v1/accountbooks
@@ -190,3 +195,66 @@ class AccountBooksDetailRecoveryAPIView(APIView):
 
         except KeyError:
             return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# url : GET, POST api/v1/accountbooks/<accountbook_id>/records
+class AccountBooksRecordAPIView(APIView):
+    """
+    Assignee : 훈희
+    permission = 작성자 본인만 가능
+    Http method = POST
+    POST : 가계부 기록 생성
+    """
+
+    permission_classes = [IsOwner]
+
+    def get_object_and_check_permission(self, obj_id):
+        """
+        Assignee : 훈희
+        obj_id : int
+        input 인자로 AccountBookRecord 객체를 가져와 퍼미션 검사를 하는 메서드입니다.
+        DoesNotExist 에러 발생 시 None을 리턴합니다.
+        APIView 클래스에 정의된 check_object_permissions 메서드를 override해서 검사를 진행합니다.
+        """
+        try:
+            object = AccountBook.objects.get(id=obj_id)
+        except AccountBook.DoesNotExist:
+            return
+
+        self.check_object_permissions(self.request, object)
+        return object
+
+    def get(self, request, accountbook_id):
+        """
+        Assignee : 훈희
+        클라이언트의 요청으로 지금까지 기록된 가계부 리스트 정보를 response 하는 메서드입니다.
+        로그인된 유저가 생성한 가계부 리스트에서 삭제가 되지 않은 가계부 목록을 기본적으로 가져옵니다.
+        쿼리 파라미터로 "status" 키의 값이 "delete"가 들어오는 경우 삭제된 데이터를 보여줍니다.
+        """
+
+        data_request_status = request.GET.get("request_status", None)
+        if data_request_status == "delete":
+            account_books = self.get_object_and_check_permission(accountbook_id)
+
+            if not account_books:
+                return Response({"error": "가계부가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = GetDeleteAccountBooksModelSerializer(account_books)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, accountbook_id):
+        """
+        Assignee : 훈희
+        obj_id : int
+        클라이언트의 요청 및 가계부 고유번호 입력 시, 해당 가계부에 속한 금액과 메모 기록을 생성하는 메서드입니다.
+        context 딕셔너리로 AccountBook 객체를 보내주어 클라이언트가 가계부 id를 입력하지 않게 설정했습니다.
+        ex) {"amount": "30000","memo": "현금매출"}
+        """
+        account_book = get_object_or_404(AccountBook, id=accountbook_id, is_deleted=False)
+        context = {"account_book": account_book}
+        serializer = AccountBooksRecordModelSerializer(data=request.data, context=context)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
