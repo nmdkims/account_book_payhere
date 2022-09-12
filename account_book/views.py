@@ -346,3 +346,53 @@ class AccountBooksRecordDetailAPIView(APIView):
 
         except KeyError:
             return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AccountBooksRecordDetailRecoveryAPIView(APIView):
+    """
+    Assignee : 훈희
+    permission = 작성자 본인만 가능
+    Http method = PATCH
+    PATCH : 가계부 기록 복구
+    """
+
+    permission_classes = [IsOwner]
+
+    def get_object_and_check_permission(self, obj_id):
+        """
+        Assignee : 훈희
+        obj_id : int
+        input 인자로 AccountBookRecord 객체를 가져와 퍼미션 검사를 하는 메서드입니다.
+        DoesNotExist 에러 발생 시 None을 리턴합니다.
+        APIView 클래스에 정의된 check_object_permissions 메서드를 override해서 검사를 진행합니다.
+        """
+        try:
+            object = AccountBookRecord.objects.get(id=obj_id)
+        except AccountBookRecord.DoesNotExist:
+            return
+
+        self.check_object_permissions(self.request, object)
+        return object
+
+    def patch(self, request, record_id):
+        """
+        Assignee : 훈희
+        record_id : int
+        가계부 기록 단일 객체 복구를 위한 메서드입니다.
+        is_deleted 필드의 값을 True에서 False로 변경하는 로직으로 구성됩니다.
+        is_deleted가 True or None인 경우 400에러를 리턴합니다.
+        """
+        account_book_record = self.get_object_and_check_permission(record_id)
+        if not account_book_record:
+            return Response({"error": "기록이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            if request.data["is_deleted"] == False:
+                account_book_record.is_deleted = False
+                account_book_record.save()
+                return Response({"message": "기록 복구 성공!!."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        except KeyError:
+            return Response({"error": "잘못된 요청입니다."}, status=status.HTTP_400_BAD_REQUEST)
