@@ -1,46 +1,44 @@
+# docker-compose.yml
 version: '3'
-
 services:
 
-    nginx:
-        container_name: nginx-con
-        image: nginx:latest
-        restart: always
-        ports:
-          - "80:80"
-        volumes:
-          - ./nginx:/etc/nginx/conf.d
-          - ./static/:/static
-        depends_on:
-          - django
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    image: docker-server/nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/srv/docker-server
+      - ./log:/var/log/nginx
+    depends_on:
+      - django
 
+  django:
+    container_name: django
+    build: .
+    image: docker-server/django
+    restart: always
+    command: >
+      sh -c "pipenv run python manage.py collectstatic --no-input &&
+      pipenv run uwsgi --ini uwsgi.ini"
+    volumes:
+      - ./:/srv/docker-server
+      - ./log:/var/log/uwsgi1
+    depends_on:
+      - mysql
 
-    django:
-        container_name: django-con
-        build: .
-        image: django
-        restart: always
-        command: >
-          sh -c "pipenv run python manage.py collectstatic --no-input 
-          && pipenv run gunicorn config.wsgi:application --bind 0.0.0.0:8000"
-        volumes:
-          - ./:/docker-server
-        expose:
-          - "8000"
-        depends_on:
-          - mysql
-
-
-    mysql:
-        container_name: mysql-con
-        image: mysql:5.7
-        env_file: .env
-        restart: always
-        ports:
-          - "3306:3306"
-        environment:
-          - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-          - MYSQL_DATABASE=${MYSQL_DATABASE}
-          - MYSQL_USER=${MYSQL_USER}
-          - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+  mysql:
+    container_name: mysql-con
+    image: mysql:5.7
+    env_file: .env
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
