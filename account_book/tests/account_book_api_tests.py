@@ -36,10 +36,10 @@ class AccountBooksAPIViewTestCase(APITestCase):
     def test_account_books_api_view_get_valid_data(self):
         """가계부 단건 조회"""
         url_accountbooks = "/api/v1/accountbooks"
-        account_book_data = {"title": "이디야커피 여의도점", "balance": "1000000"}
+        account_book_data = {"book_title": "이디야커피 여의도점", "balance": "1000000"}
 
         response = self.client.post(url_accountbooks, account_book_data, format="json")
-        account_book_id = response.data["가계부_고유번호"]
+        account_book_id = response.data["account_book_number"]
 
         url_accountbooks_record = f"/api/v1/accountbooks/{account_book_id}"
 
@@ -50,7 +50,7 @@ class AccountBooksAPIViewTestCase(APITestCase):
         """가계부 생성"""
         url_accountbooks = "/api/v1/accountbooks"
 
-        account_book_data = {"title": "이디야커피 여의도점", "balance": "1000000"}
+        account_book_data = {"book_title": "이디야커피 여의도점", "balance": "1000000"}
         response = self.client.post(url_accountbooks, account_book_data, format="json")
         self.assertEqual(response.status_code, 201)
 
@@ -61,15 +61,15 @@ class AccountBooksAPIViewTestCase(APITestCase):
         를 사용해서 soft delete 방식으로 삭제하여 한가지 테스트에 표현
         """
         url_accountbooks = "/api/v1/accountbooks"
-        account_book_data = {"title": "이디야커피 여의도점", "balance": "1000000"}
+        account_book_data = {"book_title": "이디야커피 여의도점", "balance": "1000000"}
 
         response = self.client.post(url_accountbooks, account_book_data, format="json")
-        account_book_id = response.data["가계부_고유번호"]
+        account_book_id = response.data["account_book_number"]
 
         url_accountbook_modify_url = f"/api/v1/accountbooks/{account_book_id}"
 
         account_book_data = {
-            "title": "서가앤쿡 대구점",
+            "book_title": "서가앤쿡 대구점",
             "balance": "1000000",
         }
 
@@ -83,10 +83,10 @@ class AccountBooksAPIViewTestCase(APITestCase):
         를 사용해서 soft delete 방식으로 삭제하여 한가지 테스트에 표현
         """
         url_accountbooks = "/api/v1/accountbooks"
-        account_book_data = {"title": "이디야커피 여의도점", "balance": "1000000"}
+        account_book_data = {"book_title": "이디야커피 여의도점", "balance": "1000000"}
 
         response = self.client.post(url_accountbooks, account_book_data, format="json")
-        account_book_id = response.data["가계부_고유번호"]
+        account_book_id = response.data["account_book_number"]
 
         url_accountbook_modify_url = f"/api/v1/accountbooks/{account_book_id}/recovery"
 
@@ -98,10 +98,10 @@ class AccountBooksAPIViewTestCase(APITestCase):
     def test_account_books_record_api_view_post(self):
         """가계부 기록 생성"""
         url_accountbooks = "/api/v1/accountbooks"
-        account_book_data = {"title": "이디야커피 여의도점", "balance": "1000000"}
+        account_book_data = {"book_title": "이디야커피 여의도점", "balance": "1000000"}
 
         response = self.client.post(url_accountbooks, account_book_data, format="json")
-        account_book_id = response.data["가계부_고유번호"]
+        account_book_id = response.data["account_book_number"]
 
         url_accountbook_records = f"/api/v1/accountbooks/{account_book_id}/records"
 
@@ -113,10 +113,10 @@ class AccountBooksAPIViewTestCase(APITestCase):
     def test_account_books_record_api_view_get(self):
         """가계부 기록 단건 상세 조회"""
         url_accountbooks = "/api/v1/accountbooks"
-        account_book_data = {"title": "이디야커피 여의도점", "balance": "1000000"}
+        account_book_data = {"book_title": "이디야커피 여의도점", "balance": "1000000"}
 
         response = self.client.post(url_accountbooks, account_book_data, format="json")
-        account_book_id = response.data["가계부_고유번호"]
+        account_book_id = response.data["account_book_number"]
 
         url_accountbook_records = f"/api/v1/accountbooks/{account_book_id}/records"
 
@@ -134,12 +134,12 @@ class AccountBooksAPIViewTestCase(APITestCase):
         """가계부 기록 수정"""
         url_accountbooks = "/api/v1/accountbooks"
         account_book_data = {
-            "title": "이디야커피 여의도점",
+            "book_title": "이디야커피 여의도점",
             "balance": "1000000",
         }
 
         response = self.client.post(url_accountbooks, account_book_data, format="json")
-        account_book_id = response.data["가계부_고유번호"]
+        account_book_id = response.data["account_book_number"]
 
         url_accountbook_records = f"/api/v1/accountbooks/{account_book_id}/records"
 
@@ -156,18 +156,18 @@ class AccountBooksAPIViewTestCase(APITestCase):
             url_accountbook_modify_records, account_book_modify_records_data, format="json"
         )
 
-        self.assertEqual(response_modify_data.status_code, 404)
+        self.assertEqual(response_modify_data.status_code, 200)
 
     def test_account_books_record_api_view_patch(self):
         """가계부 기록 삭제/복구"""
         url_accountbooks = "/api/v1/accountbooks"
         account_book_data = {
-            "title": "이디야커피 여의도점",
+            "book_title": "이디야커피 여의도점",
             "balance": "1000000",
         }
 
         response = self.client.post(url_accountbooks, account_book_data, format="json")
-        account_book_id = response.data["가계부_고유번호"]
+        account_book_id = response.data["account_book_number"]
 
         url_accountbook_records = f"/api/v1/accountbooks/{account_book_id}/records"
 
@@ -184,4 +184,4 @@ class AccountBooksAPIViewTestCase(APITestCase):
             url_accountbook_modify_records, account_book_modify_records_data, format="json"
         )
 
-        self.assertEqual(response_modify_data.status_code, 404)
+        self.assertEqual(response_modify_data.status_code, 400)
