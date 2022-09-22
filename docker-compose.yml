@@ -26,9 +26,11 @@ services:
     volumes:
       - ./:/srv/docker-server
       - ./log:/var/log/uwsgi1
+    depends_on:
+      - mysql
 
   mysql:
-    container_name: mysql-con
+    container_name: mysql
     image: mysql:5.7
     env_file: .env
     restart: always

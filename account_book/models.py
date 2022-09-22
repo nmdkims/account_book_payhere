@@ -3,13 +3,11 @@ from django.db import models
 from config.models import BaseTimeStamp as BaseTimeStampModel
 from user.models import User as UserModel
 
-"""Create your models here."""
-
 
 class AccountBook(BaseTimeStampModel):
     """
     Assignee : 훈희
-    사업장 별 가계부를 만들 수 있는 가계부 모델입니다.
+    월 별 가계부를 만들 수 있는 가계부 모델입니다.
     """
 
     user = models.ForeignKey(to=UserModel, verbose_name="사용자", on_delete=models.CASCADE, related_name="account_book")
